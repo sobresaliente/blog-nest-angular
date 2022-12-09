@@ -14,11 +14,24 @@ export class UserService {
   ) {}
 
   public getAll(): Observable<IUser[]> {
-    return from(this._userRepository.find());
+    return from(this._userRepository.find()).pipe(
+      map((users: IUser[]) => {
+        users.forEach((user) => {
+          return delete user.password;
+        });
+
+        return users;
+      }),
+    );
   }
 
   public getOne(id: number): Observable<IUser> {
-    return from(this._userRepository.findOneBy({ id }));
+    return from(this._userRepository.findOneBy({ id })).pipe(
+      map((user: IUser) => {
+        delete user.password;
+        return user;
+      }),
+    );
   }
 
   public create(user: IUser): Observable<IUser> {
@@ -29,10 +42,11 @@ export class UserService {
         newUser.email = user.email;
         newUser.username = user.username;
         newUser.password = hashedPassword;
+
         return from(this._userRepository.save(newUser)).pipe(
           map((user: IUser) => {
-            delete user.password;
-            return user;
+            const { password, ...result } = user;
+            return result;
           }),
           catchError((error) => throwError(error)),
         );
@@ -41,10 +55,51 @@ export class UserService {
   }
 
   public update(id: number, user: IUser): Observable<UpdateResult> {
+    delete user.email;
+    delete user.password;
+    delete user.username;
+
     return from(this._userRepository.update(id, user));
   }
 
   public deleteOne(id: number): Observable<DeleteResult> {
     return from(this._userRepository.delete(id));
+  }
+
+  public login(user: IUser): Observable<string> {
+    return this.validateUser(user.email, user.password).pipe(
+      switchMap((user: IUser) => {
+        if (user) {
+          return this._authService.generateJWT(user).pipe(
+            map((jwt: string) => {
+              return jwt;
+            }),
+          );
+        } else {
+          return 'Wrong credentials';
+        }
+      }),
+    );
+  }
+
+  public validateUser(email: string, password: string): Observable<IUser> {
+    return this.findUserByEmail(email).pipe(
+      switchMap((user: IUser) => {
+        return this._authService.comparePasswords(password, user.password).pipe(
+          map((isEqual: boolean) => {
+            if (isEqual) {
+              delete user.password;
+              return user;
+            } else {
+              throw Error;
+            }
+          }),
+        );
+      }),
+    );
+  }
+
+  public findUserByEmail(email: string): Observable<IUser> {
+    return from(this._userRepository.findOneBy({ email }));
   }
 }
