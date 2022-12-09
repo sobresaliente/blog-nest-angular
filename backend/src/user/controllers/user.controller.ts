@@ -3,7 +3,7 @@ import { UserService } from '../services/user.service';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private _userService: UserService) {}
 
