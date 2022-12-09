@@ -9,8 +9,6 @@ export class AuthService {
   constructor(private readonly _jwtService: JwtService) {}
 
   public generateJWT(user: IUser): Observable<string> {
-    console.log(user);
-
     return from(this._jwtService.sign({ user }));
   }
 
