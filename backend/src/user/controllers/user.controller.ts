@@ -1,9 +1,10 @@
+import { IError } from './../models/error';
 import { IUser } from './../models/userDTO';
 import { UserService } from '../services/user.service';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, map } from 'rxjs';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private _userService: UserService) {}
 
@@ -18,8 +19,25 @@ export class UserController {
   }
 
   @Post()
-  public create(@Body() user: IUser): Observable<IUser> {
-    return this._userService.create(user);
+  public create(@Body() user: IUser): Observable<IUser | IError> {
+    return this._userService.create(user).pipe(
+      map((user: IUser) => user),
+      catchError((error) => {
+        return of({ error: error.message });
+      }),
+    );
+  }
+
+  @Post('login')
+  public login(@Body() user: IUser): Observable<any> {
+    let jwtToken = '';
+    return this._userService.login(user).pipe(
+      map((jwt: string) => {
+        jwtToken = jwtToken + jwt;
+
+        return { access_token: jwtToken };
+      }),
+    );
   }
 
   @Put(':id')
