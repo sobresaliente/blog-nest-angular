@@ -38,7 +38,6 @@ export class UserService {
         );
       }),
     );
-    return from(this._userRepository.save(user));
   }
 
   public update(id: number, user: IUser): Observable<UpdateResult> {
