@@ -1,7 +1,7 @@
-import { AuthService } from './../auth/services/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { IUser } from './../models/userDTO';
 import { UserEntity } from './../models/user.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Observable, from, switchMap, map, catchError, throwError } from 'rxjs';
@@ -42,6 +42,7 @@ export class UserService {
         newUser.email = user.email;
         newUser.username = user.username;
         newUser.password = hashedPassword;
+        newUser.role = user.role;
 
         return from(this._userRepository.save(newUser)).pipe(
           map((user: IUser) => {
@@ -54,11 +55,15 @@ export class UserService {
     );
   }
 
-  public update(id: number, user: IUser): Observable<UpdateResult> {
+  public update(id: string, user: IUser): Observable<UpdateResult> {
     delete user.email;
     delete user.password;
     delete user.username;
 
+    return from(this._userRepository.update(id, user));
+  }
+
+  public updateRole(id: string, user: IUser): Observable<UpdateResult> {
     return from(this._userRepository.update(id, user));
   }
 

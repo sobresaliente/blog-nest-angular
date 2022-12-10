@@ -1,13 +1,19 @@
+import { UserRole } from './../models/userRole';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { hasRoles } from 'src/auth/decorators/hasRole.decorator';
 import { IError } from './../models/error';
 import { IUser } from './../models/userDTO';
 import { UserService } from '../services/user.service';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { catchError, Observable, of, map } from 'rxjs';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-guard';
 
 @Controller('users')
 export class UserController {
   constructor(private _userService: UserService) {}
 
+  @hasRoles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   public getAll(): Observable<IUser[]> {
     return this._userService.getAll();
@@ -41,8 +47,15 @@ export class UserController {
   }
 
   @Put(':id')
-  public update(@Param() params, @Body() body) {
-    return this._userService.update(params.id, body);
+  public update(@Param() params, @Body() user: IUser) {
+    return this._userService.update(params.id, user);
+  }
+
+  @hasRoles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id/role')
+  public updateRole(@Param() params, @Body() user: IUser) {
+    return this._userService.updateRole(params.id, user);
   }
 
   @Delete(':id')
