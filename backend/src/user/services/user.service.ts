@@ -5,6 +5,8 @@ import { Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Observable, from, switchMap, map, catchError, throwError } from 'rxjs';
+import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import { UserRole } from '../models/userRole';
 
 @Injectable()
 export class UserService {
@@ -34,6 +36,17 @@ export class UserService {
     );
   }
 
+  public paginate(options: IPaginationOptions): Observable<Pagination<IUser>> {
+    return from(paginate<IUser>(this._userRepository, options)).pipe(
+      map((usersPage: Pagination<IUser>) => {
+        usersPage.items.forEach((user) => {
+          delete user.password;
+        });
+        return usersPage;
+      }),
+    );
+  }
+
   public create(user: IUser): Observable<IUser> {
     return this._authService.hashPassword(user.password).pipe(
       switchMap((hashedPassword: string) => {
@@ -42,7 +55,7 @@ export class UserService {
         newUser.email = user.email;
         newUser.username = user.username;
         newUser.password = hashedPassword;
-        newUser.role = user.role;
+        newUser.role = UserRole.USER;
 
         return from(this._userRepository.save(newUser)).pipe(
           map((user: IUser) => {
@@ -59,6 +72,7 @@ export class UserService {
     delete user.email;
     delete user.password;
     delete user.username;
+    delete user.role; //these values can't be changed
 
     return from(this._userRepository.update(id, user));
   }
