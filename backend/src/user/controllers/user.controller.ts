@@ -4,9 +4,10 @@ import { hasRoles } from 'src/auth/decorators/hasRole.decorator';
 import { IError } from './../models/error';
 import { IUser } from './../models/userDTO';
 import { UserService } from '../services/user.service';
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { catchError, Observable, of, map } from 'rxjs';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-guard';
+import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('users')
 export class UserController {
@@ -15,8 +16,9 @@ export class UserController {
   @hasRoles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  public getAll(): Observable<IUser[]> {
-    return this._userService.getAll();
+  public index(@Query('page') page: number = 1, @Query('limit') limit: number = 15): Observable<Pagination<IUser>> {
+    limit = limit > 100 ? 100 : limit;
+    return this._userService.paginate({ page, limit, route: 'http://localhost:3000/users' });
   }
 
   @Get(':id')
