@@ -1,0 +1,53 @@
+<div
+  class="bg-stone-900 text-stone-200 w-1/2 h-1/2 border-2 border-stone-200 mx-auto flex flex-col items-center"
+>
+  <h1 class="text-xl">Login page</h1>
+  <form [formGroup]="registerForm" (ngSubmit)="register()" class='flex flex-col'>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Email"
+        formControlName="email"
+      />
+      <mat-hint *ngIf="registerForm.controls['email'].errors">Email required</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Full name</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Full name"
+        formControlName="name"
+      />
+      <mat-hint *ngIf="registerForm.controls['name'].errors">Full name required</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Username"
+        formControlName="username"
+      />
+      <mat-hint *ngIf="registerForm.controls['username'].errors">Username required</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+      />
+      <mat-hint *ngIf="registerForm.controls['password'].errors">Password required</mat-hint>
+    </mat-form-field>
+
+
+    <button type="submit" [disabled]='registerForm.invalid' mat-flat-button class='register-button'>Register</button>
+  </form>
+</div>
