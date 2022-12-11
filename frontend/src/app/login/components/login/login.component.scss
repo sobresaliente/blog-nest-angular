@@ -1,3 +1,7 @@
 .login-button {
   background-color: white !important;
 }
+
+input:-webkit-autofill {
+  -webkit-background-clip: text;
+}

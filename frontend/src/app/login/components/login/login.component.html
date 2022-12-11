@@ -1,36 +1,40 @@
+<div class='items-center w-full h-full flex'>
+
 <div
   class="bg-stone-900 text-stone-200 w-1/2 h-1/2 border-2 border-stone-200 mx-auto flex flex-col items-center"
 >
-  <h1 class="text-xl">Login page</h1>
-  <form [formGroup]="loginForm" (ngSubmit)="login()" class='flex flex-col'>
+  <h1 class="text-2xl my-2">Login page</h1>
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class='flex flex-col my-10'>
     <mat-form-field>
       <mat-label>Email</mat-label>
       <input
         matInput
         type="text"
-        placeholder="Email"
         formControlName="email"
+        class='login-input'
       />
-      <mat-hint *ngIf="loginForm.controls['email'].errors">Email required</mat-hint>
+      <mat-hint *ngIf="loginForm.controls['email'].errors" class='text-red-600'>Email required</mat-hint>
+
     </mat-form-field>
+
 
     <mat-form-field>
       <mat-label>Password</mat-label>
       <input
         matInput
         type="password"
-        placeholder="Password"
         formControlName="password"
       />
-      <mat-hint *ngIf="loginForm.controls['password'].errors">Password required</mat-hint>
+      <mat-hint *ngIf="loginForm.controls['password'].errors" class='text-red-600'>Password required</mat-hint>
     </mat-form-field>
 
 
     <button type="submit" [disabled]='loginForm.invalid' mat-flat-button class='login-button'>Login</button>
-
+    <a [routerLink]="['..', 'register']">Doesn't have an account yet?</a>
+    <a [routerLink]="['../..']">Back</a>
 
   </form>
 
-  <a href='#' routerLink='../register'>Doesn't have an account yet?</a>
 
+</div>
 </div>
