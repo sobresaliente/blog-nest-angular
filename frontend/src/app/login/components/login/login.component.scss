@@ -1,7 +1,22 @@
+.login-page {
+  color: #c9d1d9;
+}
+
+.login-window {
+  background-color: rgba(22,27,34);
+  border-radius: 16px;
+}
+
 .login-button {
-  background-color: white !important;
+  background-color: #1d4ed8 !important;
+  color: #c9d1d9 !important;
+  &:hover {
+    background-color: #2563eb !important;
+  }
 }
 
 input:-webkit-autofill {
   -webkit-background-clip: text;
 }
+
+
