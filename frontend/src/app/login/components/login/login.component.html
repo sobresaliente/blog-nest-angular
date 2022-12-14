@@ -1,36 +1,66 @@
-<div
-  class="bg-stone-900 text-stone-200 w-1/2 h-1/2 border-2 border-stone-200 mx-auto flex flex-col items-center"
->
-  <h1 class="text-xl">Login page</h1>
-  <form [formGroup]="loginForm" (ngSubmit)="login()" class='flex flex-col'>
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        type="text"
-        placeholder="Email"
-        formControlName="email"
-      />
-      <mat-hint *ngIf="loginForm.controls['email'].errors">Email required</mat-hint>
-    </mat-form-field>
+<div class="items-center w-full h-full flex flex-col login-page py-12">
+  <a [routerLink]="['../..']"
+    ><img src="assets/img.png" class="w-24" alt="logo"
+  /></a>
 
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        placeholder="Password"
-        formControlName="password"
-      />
-      <mat-hint *ngIf="loginForm.controls['password'].errors">Password required</mat-hint>
-    </mat-form-field>
+  <h1 class="text-2xl my-6">Sign in to blog</h1>
 
+  <div
+    class="login-window login-window-top w-11/12 h-1/3 border-blue-400 border-2 mx-auto flex flex-col items-center max-w-sm"
+  >
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="login()"
+      class="flex flex-col my-10"
+    >
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" formControlName="email" />
+      </mat-form-field>
+      <div
+        *ngIf="loginForm.controls['email'].errors && isSubmitted"
+        class="error"
+      >
+        <mat-hint
+          class="text-red-600 block"
+          *ngIf="loginForm.controls['email'].errors['minlength']"
+          >Email should be at least 3 characters long</mat-hint
+        >
 
-    <button type="submit" [disabled]='loginForm.invalid' mat-flat-button class='login-button'>Login</button>
+        <mat-hint
+          class="text-red-600 block"
+          *ngIf="loginForm.controls['email'].errors['email']"
+          >Email should contain @ symbol</mat-hint
+        >
+      </div>
 
+      <mat-form-field class="form-field mt-4">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <div
+        *ngIf="loginForm.controls['password'].errors && isSubmitted"
+        class="error"
+      >
+        <mat-hint class="text-red-600"
+          >Password should be at least 8 characters long</mat-hint
+        >
+      </div>
 
-  </form>
+      <button type="submit" mat-flat-button class="login-button bg-blue-700">
+        Login
+      </button>
+    </form>
+  </div>
 
-  <a href='#' routerLink='../register'>Doesn't have an account yet?</a>
-
+  <div
+    class="login-window w-11/12 h-16 my-6 border-blue-400 border-2 mx-auto flex flex-col items-center max-w-sm justify-center"
+  >
+    <span
+      >New to my blog?
+      <a [routerLink]="['..', 'register']" class="text-blue-400"
+        >Change it now!</a
+      ></span
+    >
+  </div>
 </div>

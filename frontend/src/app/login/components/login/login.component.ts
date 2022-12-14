@@ -12,9 +12,14 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   private _loginForm: FormGroup = new FormGroup({});
+  private _isSubmitted: boolean = false;
 
   public get loginForm(): FormGroup {
     return this._loginForm;
+  }
+
+  public get isSubmitted(): boolean {
+    return this._isSubmitted;
   }
 
   constructor(
@@ -27,7 +32,7 @@ export class LoginComponent implements OnInit {
       email: new FormControl(null, [
         Validators.required,
         Validators.email,
-        Validators.minLength(6),
+        Validators.minLength(3),
       ]),
       password: new FormControl(null, [
         Validators.required,
@@ -37,6 +42,7 @@ export class LoginComponent implements OnInit {
   }
 
   public login(): void {
+    this._isSubmitted = true;
     if (this._loginForm.invalid) {
       return;
     }
@@ -50,5 +56,4 @@ export class LoginComponent implements OnInit {
         (error) => console.log(error)
       );
   }
-
 }
