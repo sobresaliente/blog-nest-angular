@@ -3,8 +3,11 @@
 }
 
 .login-window {
-  background-color: rgba(22,27,34);
+  background-color: rgba(22, 27, 34);
   border-radius: 16px;
+  &-top {
+    min-height: 300px;
+  }
 }
 
 .login-button {
@@ -19,4 +22,6 @@ input:-webkit-autofill {
   -webkit-background-clip: text;
 }
 
-
+.error {
+  margin-top: -1.5em;
+}

@@ -1,0 +1,16 @@
+nav ul {}
+
+
+nav li {
+
+}
+
+nav a {
+  transform: scaleX(0);
+  padding-bottom: 0.5em;
+  text-decoration: underline 0.15em inherit;
+  transition: text-decoration-color 300ms;
+  &:hover {
+    text-decoration-color: #2563eb;
+  }
+}
